@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIDYUT - Modern Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/Frontend/style.css">
+    <style>
+        /* loader */
+         /* Content Wrapper Styles */
+         .content-wrapper {
+            display: none;
+        }
+
+        /* Loader Styles */
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #212121;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader {
+            color: rgb(124, 124, 124);
+            font-family: "Poppins", sans-serif;
+            font-weight: 500;
+            font-size: 25px;
+            height: 40px;
+            padding: 10px 10px;
+            display: flex;
+            border-radius: 8px;
+        }
+
+        .words {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .words::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                #212121 10%,
+                transparent 30%,
+                transparent 70%,
+                #212121 90%
+            );
+            z-index: 20;
+        }
+
+        .word {
+            display: block;
+            height: 100%;
+            padding-left: 6px;
+            color: #956afa;
+            animation: spin_4991 4s infinite;
+        }
+
+        @keyframes spin_4991 {
+            10% { transform: translateY(-102%); }
+            25% { transform: translateY(-100%); }
+            35% { transform: translateY(-202%); }
+            50% { transform: translateY(-200%); }
+            60% { transform: translateY(-302%); }
+            75% { transform: translateY(-300%); }
+            85% { transform: translateY(-402%); }
+            100% { transform: translateY(-400%); }
+        }
+
+        
+    </style>
+</head>
+<body>
+    
+    <!-- Loader Section -->
+    <div class="loader-wrapper" id="loader">
+        <div class="loader">
+            <p>loading</p>
+            <div class="words">
+                <span class="word">Voltage</span>
+                <span class="word">Current</span>
+                <span class="word">Power</span>
+            </div>
+        </div>
+    </div>
+
+
+
+
+<div class="content-wrapper" id="content">    
+
+<!-- Phase Selection Modal -->
+<div class="phase-modal" id="phaseModal">
+    <div class="phase-selection">
+        <h2>Select Monitoring Phase</h2>
+        <div class="phase-options">
+            <div class="phase-option" data-phase="1">
+                <i class="fas fa-bolt"></i>
+                <h3 style="color: black;">Phase 1</h3>
+                <p>Device SEG0001</p>
+            </div>
+            <div class="phase-option" data-phase="2">
+                <i class="fas fa-bolt"></i>
+                <h3 style="color: black;">Phase 2</h3>
+                <p>Device SEG0002</p>
+            </div>
+            <div class="phase-option" data-phase="3">
+                <i class="fas fa-bolt"></i>
+                <h3 style="color: black;">Phase 3</h3>
+                <p>Device SEG0003</p>
+            </div>
+        </div>
+        <button class="confirm-btn" id="confirmPhase" disabled>Start Monitoring</button>
+    </div>
+</div>
+
+<!-- Active Phase Indicator -->
+<div class="active-phase-indicator" id="phaseIndicator">
+    Monitoring Phase <span id="currentPhase">1</span>
+</div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <button id="menu-toggle" class="menu-btn">
+                    <i class="fas fa-bars text-gray-400"></i>
+                </button>
+                <a href="/" class="logo">VIDYUT</a>
+            </div>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search...">
+            </div>
+            <div class="user-section">
+                <button id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sidebar">
+        <!-- <div class="nav-item phase" data-phase="1" onclick="sender(1)">
+            <i class="fas fa-chart-line"></i>
+            <span>Phase 1</span>
+        </div>
+        <div class="nav-item phase" data-phase="2" onclick="sender(2)">
+            <i class="fas fa-chart-line"></i>
+            <span>Phase 2</span>
+        </div>
+        <div class="nav-item phase" data-phase="3" onclick="sender(3)">
+            <i class="fas fa-chart-line"></i>
+            <span>Phase 3</span>
+        </div> -->
+        <style>
+            .nav-item.phase {
+                padding: 10px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+            .nav-item.phase.active {
+                background-color: #007bff; /* Change to the desired active color */
+                color: white;
+            }
+        </style>
+        
+        <!-- <div class="nav-item phase" data-phase="1" onclick="selectPhase(this); sender(1)">
+            <i class="fas fa-chart-line"></i>
+            <span>Phase 1</span>
+        </div>
+        <div class="nav-item phase" data-phase="2" onclick="selectPhase(this); sender(2)">
+            <i class="fas fa-chart-line"></i>
+            <span>Phase 2</span>
+        </div>
+        <div class="nav-item phase" data-phase="3" onclick="selectPhase(this); sender(3)">
+            <i class="fas fa-chart-line"></i>
+            <span>Phase 3</span>
+        </div> -->
+        
+        <script>
+            function selectPhase(selectedElement) {
+                // Remove 'active' class from all phase elements
+                document.querySelectorAll('.nav-item.phase').forEach(el => {
+                    el.classList.remove('active');
+                });
+                
+                // Add 'active' class to the selected element
+                selectedElement.classList.add('active');
+            }
+        </script>
+        
+        <div class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Analytics</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="grid-container">
+            <div class="card" style="background-color: #212121;">
+                <div class="card-header" >
+                    <h3 class="card-title">Voltage</h3>
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="card-value">220V</div>
+                <div class="card-trend">+2.5% from last hour</div>
+            </div>
+            <div class="card"  style="background-color: #212121;">
+                <div class="card-header">
+                    <h3 class="card-title">Current</h3>
+                    <i class="fas fa-wave-square"></i>
+                </div>
+                <div class="card-value">15A</div>
+                <div class="card-trend">Stable</div>
+            </div>
+            <div class="card"  style="background-color: #212121;">
+                <div class="card-header">
+                    <h3 class="card-title">Power</h3>
+                    <i class="fas fa-plug"></i>
+                </div>
+                <div class="card-value">3.3kW</div>
+                <div class="card-trend">-1.2% from last hour</div>
+            </div>
+        </div>
+
+
+        <div class="gauge-container" style="display: flex; flex-wrap: wrap; justify-content: center; background-color: #212121; ">
+            <div id="gauge1" class="gauge" style="height: 50vh;"></div>
+            <div id="gauge2" class="gauge" style="height: 50vh;"></div>
+            <div id="gauge3" class="gauge" style="height: 50vh;"></div>
+            <div id="gauge4" class="gauge" style="height: 50vh;"></div>
+            <div id="gauge5" class="gauge" style="height: 50vh;"></div>
+            <div id="gauge6" class="gauge" style="height: 50vh;"></div>
+        </div>
+
+        <!-- <div class="gauge-container" style="display: flex; flex-direction: column;">
+            <div id="line1" class="line"></div>
+            <div id="line2" class="line"></div>
+        </div> -->
+
+
+       
+
+     <div class="devices" style="display: flex; justify-content: center; align-items: center; margin-bottom: 40px;">
+                <div class="ac-toggle-container">
+                    <div class="ac-label">Court Lights</div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="acToggle" onchange="updateStatus()">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="status-text">
+                        Status: <span id="acStatus">Off</span>
+                    </div>
+                </div>
+
+            </div>
+            
+
+            <div class="container11"> 
+                <div class="container10" id="box">
+                    <h2>Enter Device Data</h2>
+                    <form id="deviceDataForm">
+                        <label for="deviceId">Device ID:</label>
+                        <input type="text" id="deviceId" name="deviceId" required>
+                        <br>
+    
+                        <label for="dataType">Data Type:</label>
+                        <input type="text" id="dataType" name="dataType" required>
+    
+                        <br>
+    
+                        <label for="value">Value:</label>
+                        <input type="number" id="value" name="value" required>
+    
+                        <br>
+    
+                        <button type="submit" style="background-color: #0082e6;">Submit</button>
+                    </form>
+                </div>
+
+
+                <div class="container10" id="timeRangeBox">
+                    <h2>Set Time Range</h2>
+                    <form id="timeRangeForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate">Start Date:</label>
+                                <input type="date" id="startDate" name="startDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="startTime">Start Time:</label>
+                                <input type="time" id="startTime" name="startTime" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="endDate">End Date:</label>
+                                <input type="date" id="endDate" name="endDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="endTime">End Time:</label>
+                                <input type="time" id="endTime" name="endTime" required>
+                            </div>
+                        </div>
+                        <button type="submit">Set Range</button>
+                    </form>
+                
+                    
+                    <div id="timeRangeDisplay" class="time-range-display">
+                        <h3>Selected Time Range:</h3>
+                        <div class="display-row">
+                            <p><strong>Start DateTime:</strong> <span id="displayStartDateTime">Not set</span></p>
+                        </div>
+                        <div class="display-row">
+                            <p><strong>End DateTime:</strong> <span id="displayEndDateTime">Not set</span></p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            <div class="report-container">
+                <div class="report-header">
+                    <h1 class="recent-Articles">Input Data</h1>
+                    
+                </div>
+
+                <div class="report-body">
+                    <div class="report-topic-heading">
+                        <h3 class="t-op">Device ID</h3>
+                        <h3 class="t-op">Data Type</h3>
+                        <h3 class="t-op">Value</h3>
+                        <h3 class="t-op">Status</h3>
+                    </div>
+
+                    <div class="items">
+                        
+                    </div>                        
+                    </div>
+                </div>
+    
+
+
+    </main>
+</div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        // Toggle sidebar
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+    </script>
+
+<script>
+    // Loading System Configuration
+    const LoadingSystem = {
+        loader: document.getElementById('loader'),
+        content: document.getElementById('content'),
+        
+        // Minimum loading time in milliseconds
+        minLoadTime: 1000,
+        
+        // Initialize loading system
+        init() {
+            // Store the start time
+            this.startTime = Date.now();
+            
+            // Add event listeners
+            window.addEventListener('load', () => this.handlePageLoad());
+            
+            // Add error handling
+            window.addEventListener('error', () => this.handleError());
+        },
+        
+        // Handle page load completion
+        handlePageLoad() {
+            const currentTime = Date.now();
+            const elapsedTime = currentTime - this.startTime;
+            
+            // Ensure minimum loading time
+            if (elapsedTime < this.minLoadTime) {
+                setTimeout(() => this.showContent(), 
+                    this.minLoadTime - elapsedTime);
+            } else {
+                this.showContent();
+            }
+        },
+        
+        // Show the main content
+        showContent() {
+            // Fade out loader
+            this.loader.style.opacity = '0';
+            this.loader.style.transition = 'opacity 0.5s ease';
+            
+            // Show content
+            this.content.style.display = 'block';
+            
+            // Remove loader after transition
+            setTimeout(() => {
+                this.loader.style.display = 'none';
+            }, 500);
+        },
+        
+        // Handle loading errors
+        handleError() {
+            console.error('Page loading encountered an error');
+            // You can add custom error handling here
+            this.showContent(); // Still show content on error
+        }
+    };
+
+    // Initialize the loading system
+    LoadingSystem.init();
+</script>
+    <script src="/Frontend/graph_make.js"></script>
+    <script src="/Frontend/index.js"></script>
+    <script src="/Frontend/theme.js"></script>
+    <script src="/Frontend/timeRange.js"></script>
+    <!-- <script>
+        
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     initializeTimeRange();
+        // });
+
+    </script> -->
+</body>
+</html>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vidyut - Analytics Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <style>
+        /* [Previous styles remain the same until .main] */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0c0e;
+            color: #d4d4d4;
+            line-height: 1.6;
+        }
+/* Content Wrapper Styles */
+.content-wrapper {
+            display: none;
+        }
+
+        /* Loader Styles */
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #212121;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader {
+            color: rgb(124, 124, 124);
+            font-family: "Poppins", sans-serif;
+            font-weight: 500;
+            font-size: 25px;
+            height: 40px;
+            padding: 10px 10px;
+            display: flex;
+            border-radius: 8px;
+        }
+
+        .words {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .words::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                #212121 10%,
+                transparent 30%,
+                transparent 70%,
+                #212121 90%
+            );
+            z-index: 20;
+        }
+
+        .word {
+            display: block;
+            height: 100%;
+            padding-left: 6px;
+            color: #956afa;
+            animation: spin_4991 4s infinite;
+        }
+
+        @keyframes spin_4991 {
+            10% { transform: translateY(-102%); }
+            25% { transform: translateY(-100%); }
+            35% { transform: translateY(-202%); }
+            50% { transform: translateY(-200%); }
+            60% { transform: translateY(-302%); }
+            75% { transform: translateY(-300%); }
+            85% { transform: translateY(-402%); }
+            100% { transform: translateY(-400%); }
+        }
+
+        
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #111217;
+            position: fixed;
+            overflow-y: auto;
+            border-right: 1px solid #2a2d32;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #2a2d32;
+        }
+
+        .logo {
+            color: #ff5656;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 15px 0;
+        }
+
+        .sidebar ul li {
+            padding: 12px 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #8e8e8e;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #1a1c23;
+            color: #fff;
+        }
+
+        .sidebar ul li i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        /* New styles for the landing page */
+        .hero-section {
+            padding: 80px 40px;
+            background: linear-gradient(45deg, #111217, #1a1c23);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            color: #fff;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff5656, #ff8a8a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #d4d4d4;
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff5656, #ff8a8a);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .features-section {
+            padding: 80px 40px;
+            background-color: #111217;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: #1a1c23;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #ff5656;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            color: #8e8e8e;
+            font-size: 1rem;
+        }
+
+        .dashboard-preview {
+            padding: 80px 40px;
+            background-color: #0b0c0e;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 1000px;
+            margin: 40px auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid #2a2d32;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff5656, #ff8a8a);
+        }
+        .inv_a{
+            text-decoration: none; /* Removes the underline */
+            color: inherit;        /* Inherits the text color from the parent element */
+        
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader Section -->
+    <div class="loader-wrapper" id="loader">
+        <div class="loader">
+            <p>loading</p>
+            <div class="words">
+                <span class="word">Voltage</span>
+                <span class="word">Current</span>
+                <span class="word">Power</span>
+            </div>
+        </div>
+    </div>
+ 
+<div class="content-wrapper" id="content">    
+    <div class="sidebar">
+        <!-- [Previous sidebar content remains the same] -->
+        <div class="logo-container">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <a href="/" style="text-decoration: none; color: inherit;">
+                    <span>Vidyut</span>
+                    </a>
+            </div>
+        </div>
+        <ul>
+            <li><i class="fas fa-home"></i><a class="inv_a" href="/">Home</a></li>
+            <li><i class="fas fa-compass"></i><a class="inv_a" href="/home">Explore</a></li>
+            <li><i class="fas fa-tachometer-alt"></i><a class="inv_a" href="/discography">Dashboards</a></li>          
+            <li><i class="fas fa-bell"></i><a class="inv_a" href="/auto">Auto-Timer</a></li>
+            <li><i class="fas fa-code"></i>About Us</li>
+            <li><i class="fas fa-cog"></i>Login / Logout</li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <section class="hero-section">
+            <div class="floating-shapes">
+                <div class="shape" style="width: 50px; height: 50px; top: 20%; left: 10%;"></div>
+                <div class="shape" style="width: 70px; height: 70px; top: 60%; left: 80%;"></div>
+                <div class="shape" style="width: 35px; height: 35px; top: 80%; left: 30%;"></div>
+            </div>
+            <div class="hero-content" data-aos="fade-up">
+                <h1 class="hero-title">Visualize Your Power Supply </h1>
+                <p class="hero-subtitle">Turn your data into beautiful visualizations and insightful dashboards</p>
+                <a href="/discography" class="cta-button">Dashboard</a>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="feature-title">Real-time Analytics</h3>
+                    <p class="feature-description">Monitor your metrics in real-time with powerful visualization tools and customizable dashboards.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Alerts</h3>
+                    <p class="feature-description">Set up intelligent alerts and get notified when your metrics hit critical thresholds.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="feature-title">Data Integration</h3>
+                    <p class="feature-description">Connect to multiple data sources and unify your metrics in one place.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-preview" data-aos="fade-up">
+            <h2 class="feature-title">Beautiful Dashboards</h2>
+            <p class="feature-description">Create stunning visualizations with our intuitive interface</p>
+            <div class="preview-image">
+                <img src="/Frontend/image.png" alt="Dashboard Preview" style="width: 100%; height: auto; border-radius: 10px;">
+            </div>
+        </section>
+        <section class="dashboard-preview" data-aos="fade-up">
+            <h2 class="feature-title">Stunning Graphs vsisualisation</h2>
+            <p class="feature-description">Create stunning visualizations with our intuitive interface</p>
+            <div class="preview-image">
+                <img src="/Frontend/Screenshot 2025-01-15 200537.png" alt="Dashboard Preview" style="width: 100%; height: auto; border-radius: 10px;">
+            </div>
+        </section>
+        <section class="dashboard-preview" data-aos="fade-up">
+            <h2 class="feature-title">Control your Devices</h2>
+            <p class="feature-description">Create stunning visualizations with our intuitive interface</p>
+            <div class="preview-image">
+                <img src="/Frontend/Screenshot 2025-01-15 202021.png" alt="Dashboard Preview" style="width: 100%; height: auto; border-radius: 10px;">
+            </div>
+        </section>
+        <section class="dashboard-preview" data-aos="fade-up">
+            <h2 class="feature-title">Customize your Data</h2>
+            <p class="feature-description">Create stunning visualizations with our intuitive interface</p>
+            <div class="preview-image">
+                <img src="/Frontend/Screenshot 2025-01-15 202200.png" alt="Dashboard Preview" style="width: 100%; height: auto; border-radius: 10px;">
+            </div>
+        </section>
+    </div>
+</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    </script>
+
+    <script>
+        // Loading System Configuration
+        const LoadingSystem = {
+            loader: document.getElementById('loader'),
+            content: document.getElementById('content'),
+            
+            // Minimum loading time in milliseconds
+            minLoadTime: 1000,
+            
+            // Initialize loading system
+            init() {
+                // Store the start time
+                this.startTime = Date.now();
+                
+                // Add event listeners
+                window.addEventListener('load', () => this.handlePageLoad());
+                
+                // Add error handling
+                window.addEventListener('error', () => this.handleError());
+            },
+            
+            // Handle page load completion
+            handlePageLoad() {
+                const currentTime = Date.now();
+                const elapsedTime = currentTime - this.startTime;
+                
+                // Ensure minimum loading time
+                if (elapsedTime < this.minLoadTime) {
+                    setTimeout(() => this.showContent(), 
+                        this.minLoadTime - elapsedTime);
+                } else {
+                    this.showContent();
+                }
+            },
+            
+            // Show the main content
+            showContent() {
+                // Fade out loader
+                this.loader.style.opacity = '0';
+                this.loader.style.transition = 'opacity 0.5s ease';
+                
+                // Show content
+                this.content.style.display = 'block';
+                
+                // Remove loader after transition
+                setTimeout(() => {
+                    this.loader.style.display = 'none';
+                }, 500);
+            },
+            
+            // Handle loading errors
+            handleError() {
+                console.error('Page loading encountered an error');
+                // You can add custom error handling here
+                this.showContent(); // Still show content on error
+            }
+        };
+
+        // Initialize the loading system
+        LoadingSystem.init();
+    </script>
+</body>
+</html>

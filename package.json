@@ -1,21 +1,28 @@
 {
-  "name": "project-monitoring",
+  "name": "mqtt",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "Backend_main/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build" : "echo 'No build step required'",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "date": "^2.0.5",
-    "express": "^4.21.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
     "moment": "^2.30.1",
-    "mongodb": "^6.9.0",
-    "mongoose": "^8.6.2",
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.8.1",
     "mqtt": "^5.10.1",
-    "shortid": "^2.2.16",
-    "string": "^3.3.3"
-  }
+    "package": "^1.0.1",
+    "plotly.js-dist-min": "^2.35.2",
+    "uuid": "^11.0.5",
+    "ws": "^8.18.0"
+  },
+  "keywords": [],
+  "description": ""
 }
